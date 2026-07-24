@@ -1,0 +1,107 @@
+
+
+body{
+    background-color: white;
+    
+}
+h2{
+    font-size: 24pt;
+}
+h2 > img{
+    vertical-align: middle;
+}
+
+ul.red-list{
+    color:red;
+    font-size: 14pt;
+}
+
+p.alert
+{
+    display:inline-block;
+    padding: 5px 15px;
+    border-radius: 5px;
+
+}
+
+p.alert-danger
+{
+    background-color: red;
+    color: white;
+}
+
+a.pcc-button, input.pcc-button, button.pcc-button
+{
+    background-color:#0375FF ; /*PCC Blue*/
+    color: white;
+    margin: 10px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+a.pcc-button:hover
+{
+    background-color: #ddd;
+    color:#333; ;
+}
+
+a.pcc-button-small
+{
+    margin: 0px;
+    padding: 2px 8px;
+    font-size: 12px;
+}
+
+hr{
+    margin-right: 20px;   
+}
+
+table.pcc-table
+{
+    margin: 10px;
+    margin-bottom:25px;
+    border: 1px solid #ddd;
+    border-spacing:0px;
+}
+
+table.pcc-table th, table.pcc-table td
+{
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    margin:0px;
+}
+
+tr.pcc-table-row-highlight
+{
+    background-color: lightgoldenrodyellow;
+}
+
+label{
+    display:inline-block; 
+    width: 100px;
+}
+
+button.indent-100{
+    display:inline-block; 
+    margin-left: 100px;
+}
+
+button.disabled{
+    background-color: #ddd;
+    color: #333;
+    cursor: not-allowed;
+}
+
+div.form-row{
+    margin: 10px 0;
+}
+
+div.form-row input, 
+div.form-row button{
+    min-height:30px;
+    border-radius: 3px;
+    border-width: 1px;    
+}
