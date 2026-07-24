@@ -217,3 +217,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 /.vs/PCCWordPress.slnx/FileContentIndex
+/.vs/PCCWordPress.slnx/v18
+/.vs
