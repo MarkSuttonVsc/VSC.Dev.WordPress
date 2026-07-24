@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "VSCTestPlugin", "VSCTestPlugin.phpproj", "{56391EDE-53DE-49D6-85DC-715070681868}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56391EDE-53DE-49D6-85DC-715070681868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56391EDE-53DE-49D6-85DC-715070681868}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56391EDE-53DE-49D6-85DC-715070681868}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56391EDE-53DE-49D6-85DC-715070681868}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64263B0C-B8DC-4A17-99C2-3838F173313C}
+	EndGlobalSection
+EndGlobal

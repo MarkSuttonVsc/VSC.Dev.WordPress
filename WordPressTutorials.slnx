@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/EmptyDemoPlugin/">
+    <File Path="../EmptyDemoPlugin/uninstall.php" />
+    <File Path="../EmptyDemoPlugin/vsc-demo-plugin.php" />
+  </Folder>
+</Solution>
