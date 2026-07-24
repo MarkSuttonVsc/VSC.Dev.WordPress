@@ -4,7 +4,7 @@ Plugin Name: Racing Fleet Report Plugin - HTML Table
 Text Identifier: racing-fleet-report-plugin
 Custom Post Type: None
 Plugin URI: 
-Description: A short code to display a report table
+Description: A short code to display a report table [racing_fleet_report]
 Version: 1.0 
 Version Notes: 
 Author: Mark D Sutton

@@ -1,9 +1,21 @@
 <Solution>
   <Folder Name="/AdminMenuPlugin/">
-    <File Path="../AdminMenuPlugin/pcc-admin-date-functions.php" />
-    <File Path="../AdminMenuPlugin/pcc-admin-menu-plugin.php" />
-    <File Path="../AdminMenuPlugin/pcc-admin-pms-data.php" />
-    <File Path="../AdminMenuPlugin/pcc-admin-user-ajax.php" />
-    <File Path="../AdminMenuPlugin/uninstall.php" />
+    <File Path="AdminMenuPlugin/pcc-admin-date-functions.php" />
+    <File Path="AdminMenuPlugin/pcc-admin-menu-plugin.php" />
+    <File Path="AdminMenuPlugin/pcc-admin-pms-data.php" />
+    <File Path="AdminMenuPlugin/pcc-admin-user-ajax.php" />
+    <File Path="AdminMenuPlugin/uninstall.php" />
+  </Folder>
+  <Folder Name="/RacingReportPlugin/">
+    <File Path="RacingFleetReport/racing-fleet-report-plugin.php" />
+    <File Path="RacingFleetReport/uninstall.php" />
+  </Folder>
+  <Folder Name="/SubscriptionTotalsPlugin/">
+    <File Path="SubscriptionTotalsPlugin/subscription-totals-plugin.php" />
+    <File Path="SubscriptionTotalsPlugin/uninstall.php" />
+  </Folder>
+  <Folder Name="/UserDisplayShortcodePlugin/">
+    <File Path="UserDisplayShortcodePlugin/uninstall.php" />
+    <File Path="UserDisplayShortcodePlugin/user-display-shortcode-plugin.php" />
   </Folder>
 </Solution>
