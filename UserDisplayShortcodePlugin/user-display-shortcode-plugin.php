@@ -73,6 +73,11 @@ function shortcode_output($atts, $content = NULL)
     } else {
         if ($fieldname == "status" || $fieldname == "expiration_date" || $fieldname == "post_title") {
             $pms = get_pms_field($fieldname);
+            if ($fieldname == "expiration_date") {
+                //format date
+                $datetime = date_create($pms);
+                return date_format($datetime, "d M Y");
+            }
             return esc_html($pms);
         } else {
             return "*** Field name is not supported ***" . $fieldname;
