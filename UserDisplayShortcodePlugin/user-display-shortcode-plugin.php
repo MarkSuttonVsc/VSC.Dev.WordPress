@@ -4,8 +4,8 @@ Plugin Name: Current User Data Field Display Plugin - String Value
 Text Identifier: user-display-shortcode-plugin
 Custom Post Type: None
 Plugin URI: 
-Description: A short code to display current user data [current-user fieldname="first_name"]
-Version: 1.0 
+Description: A short code to display current user data e.g. [current-user-data fieldname="first_name"]
+Version: 1.1 
 Version Notes: 
 Author: Mark D Sutton
 Author URI: visual-software.co.uk
@@ -61,10 +61,6 @@ function get_pms_field($fieldname)
 
 function shortcode_output($atts, $content = NULL)
 {
-
-
-    $user_id = get_current_user_id();
-
     $fieldname = $atts['fieldname'];
 
     if ($fieldname == "first_name" || $fieldname == "last_name") {

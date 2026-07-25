@@ -5,7 +5,7 @@ Text Identifier: racing-fleet-report-plugin
 Custom Post Type: None
 Plugin URI: 
 Description: A short code to display a report table [racing_fleet_report]
-Version: 1.0 
+Version: 1.1 Uses esc_html() to protect from malicious inputs 
 Version Notes: 
 Author: Mark D Sutton
 Author URI: visual-software.co.uk
@@ -62,14 +62,13 @@ function report_table_output()
     for($i=0; $i< count($results); $i++)
     {
         $content .= '<tr>';
-        $content .= '<td>'.$results[$i]->boat_name.'</td>';
-        $content .= '<td>'.$results[$i]->boat_type.'</td>';
-        $content .= '<td>'.$results[$i]->sail_id.'</td>';
-        $content .= '<td>'.$results[$i]->first_name.' '.$results[$i]->last_name.'</td>';
-        $content .= '<td>'.$results[$i]->boat_role.'</td>';
-        $content .= '<td>'.$results[$i]->status.'</td>';
-        $content .= '<td>'.$results[$i]->expiration_date.'</td>';
-        
+        $content .= '<td>'. esc_html($results[$i]->boat_name) .'</td>';
+        $content .= '<td>'. esc_html($results[$i]->boat_type) .'</td>';
+        $content .= '<td>'. esc_html($results[$i]->sail_id) .'</td>';
+        $content .= '<td>'. esc_html($results[$i]->first_name) .' '. esc_html($results[$i]->last_name) .'</td>';
+        $content .= '<td>'. esc_html($results[$i]->boat_role) .'</td>';
+        $content .= '<td>'. esc_html($results[$i]->status) .'</td>';
+        $content .= '<td>'. esc_html($results[$i]->expiration_date) .'</td>';
         $content .= '</tr>';
     }
     
