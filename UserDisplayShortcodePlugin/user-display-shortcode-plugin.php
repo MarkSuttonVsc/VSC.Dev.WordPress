@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Current User Data Field Display Plugin - String Value
+Plugin Name: User Data Display Plugin 
 Text Identifier: user-display-shortcode-plugin
 Custom Post Type: None
 Plugin URI: 
-Description: A short code to display current user data e.g. [current-user-data fieldname="first_name"]
-Version: 1.1 
+Description: A short code to display the string value of a given field for the current user data. E.g. [current-user-data fieldname="first_name"]
+Version: 1.1 Error message if user is not signed-in 
 Version Notes: 
 Author: Mark D Sutton
 Author URI: visual-software.co.uk
@@ -30,9 +30,9 @@ License: GPLv2
 */
 
 
-function get_pms_field($fieldname)
+function get_pms_field($fieldname, $user_id)
 {
-    $user_id = get_current_user_id();
+    
 
     global $wpdb;
     $pfx = $wpdb->prefix;
@@ -61,14 +61,19 @@ function get_pms_field($fieldname)
 
 function shortcode_output($atts, $content = NULL)
 {
+    $user_id = get_current_user_id();
+    if ($user_id == 0) {
+        return "*** User is not signed in ***";
+    }
+
     $fieldname = $atts['fieldname'];
 
     if ($fieldname == "first_name" || $fieldname == "last_name") {
-        $meta = get_user_meta(get_current_user_id(), $fieldname, true);
+        $meta = get_user_meta($user_id, $fieldname, true);
         return esc_html($meta);
     } else {
         if ($fieldname == "status" || $fieldname == "expiration_date" || $fieldname == "post_title") {
-            $pms = get_pms_field($fieldname);
+            $pms = get_pms_field($fieldname, $user_id);
             if ($fieldname == "expiration_date") {
                 //format date
                 $datetime = date_create($pms);
