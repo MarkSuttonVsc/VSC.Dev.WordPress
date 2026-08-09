@@ -4,11 +4,13 @@ Plugin Name: PCC Subscription Totals Report
 Text Identifier: subscription-totals-report
 Custom Post Type: None
 Plugin URI: 
-Description: A short code to display subscription totals table by status
+Description: A short code (subscription-totals-report) to display subscription totals table by status
 Version: 1.3 
 Version Notes: includes a cancelled column and totals row. Added table class.
+Requires at least: 7.0.2
+Requires PHP: 8.0
 Author: Mark D Sutton
-Author URI: https://hvisual-software.co.uk
+Author URI: https://visual-software.co.uk
 License: GPLv2
 */
 
@@ -29,27 +31,28 @@ License: GPLv2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
 function subscription_totals_output()
 {
     global $wpdb;
-    $pfx = $wpdb->prefix;
-    $SQL = "";
-    $SQL .= "SELECT post_title,"; 
-    $SQL .= "   SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) pending_count,";
-    $SQL .= "   SUM(CASE WHEN status='active' THEN 1 ELSE 0 END) active_count,";
-    $SQL .= "   SUM(CASE WHEN status='canceled' THEN 1 ELSE 0 END) cancelled_count,";
-    $SQL .= "   SUM(CASE WHEN status='expired' THEN 1 ELSE 0 END) expired_count,";
-    $SQL .= "   COUNT(*) total_count";
-    $SQL .= "   FROM ".$pfx."posts ";
-    $SQL .= "   LEFT JOIN ".$pfx."pms_member_subscriptions";
-    $SQL .= "      ON (".$pfx."posts.id = ".$pfx."pms_member_subscriptions.subscription_plan_id)";
-    $SQL .= "   WHERE ".$pfx."posts.post_type = 'pms-subscription'";
-    $SQL .= "   GROUP BY post_title";
+    //query not repeated, no need to cache the results, so we can use get_results() directly
+    //no need to prepare - no parameters to bind, and no user input
 
-$results = $wpdb->get_results($SQL);
-//$results = $wpdb->get_results($wpdb->prepare("SELECT post_title, SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) pending_count, SUM(CASE WHEN status='active' THEN 1 ELSE 0 END) active_count, SUM(CASE WHEN status='canceled' THEN 1 ELSE 0 END) cancelled_count, SUM(CASE WHEN status='expired' THEN 1 ELSE 0 END) expired_count, COUNT(*) total_count LEFT JOIN {$wpdb->prefix}pms_member_subscriptions ON ({$wpdb->prefix}posts.id = {$wpdb->prefix}pms_member_subscriptions.subscription_plan_id) WHERE {$wpdb->prefix}posts.post_type = 'pms-subscription' GROUP BY post_title"));
+    $results = $wpdb->get_results(
+        "SELECT post_title, 
+            SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) pending_count, 
+            SUM(CASE WHEN status='active' THEN 1 ELSE 0 END) active_count, 
+            SUM(CASE WHEN status='canceled' THEN 1 ELSE 0 END) cancelled_count, 
+            SUM(CASE WHEN status='expired' THEN 1 ELSE 0 END) expired_count, 
+            COUNT(*) total_count 
+      FROM {$wpdb->prefix}posts  
+      LEFT JOIN {$wpdb->prefix}pms_member_subscriptions 
+         ON ({$wpdb->prefix}posts.id = {$wpdb->prefix}pms_member_subscriptions.subscription_plan_id) 
+      WHERE {$wpdb->prefix}posts.post_type = 'pms-subscription' 
+      GROUP BY post_title");
 
-    $content = '';
+    $content = "";    
     $content .= "<table class='pcc-report-table'>";
     $content .= '<thead><tr><th>Plan</th><th>Pending</th><th>Expired</th><th>Cancelled</th><th>Active</th><th>Total</th></thead>';
 

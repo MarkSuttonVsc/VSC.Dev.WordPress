@@ -7,6 +7,8 @@ Plugin URI:
 Description: A short code to display a report table [racing-fleet-report]
 Version: 1.2 
 Version Notes: Plugin Checked for WordPress 7.0.3
+Requires at least: 7.0.2
+Requires PHP: 8.0
 Author: Mark D Sutton
 Author URI: https://visual-software.co.uk
 License: GPLv2

@@ -2,7 +2,7 @@
 Contributors: 
 Donate link: 
 Tags: 
-Requires at least: 7.0
+Requires at least: 7.0.2
 Tested up to: 7.0
 Stable tag: 1.2
 Requires PHP: 8.0

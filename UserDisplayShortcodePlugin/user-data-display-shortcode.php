@@ -6,7 +6,9 @@ Custom Post Type: None
 Plugin URI: 
 Description: A short code to display the string value of a given field for the current user data. E.g. [current-user-data fieldname="first_name"]
 Version: 1.3  
-Version Notes: Plugin Checked for WordPress 7.0.3
+Version Notes: Plugin (PCP) Checked for WordPress 7.0.3, using database cache for improved performance.
+Requires at least: 7.0
+Requires PHP: 8.0
 Author: Mark D Sutton
 Author URI: https://visual-software.co.uk
 License: GPLv2
@@ -38,8 +40,22 @@ function get_pms_field($fieldname, $user_id)
 {
     global $wpdb;
     $obj = [];
-    /*this custom query has been formatted as one line to pass PCP checks*/
-    $results = $wpdb->wp_cache_get($wpdb->prepare("SELECT %s FROM {$wpdb->prefix}pms_member_subscriptions INNER JOIN {$wpdb->prefix}posts ON ({$wpdb->prefix}posts.id = {$wpdb->prefix}pms_member_subscriptions.subscription_plan_id) WHERE {$wpdb->prefix}pms_member_subscriptions.user_id = %s", $fieldname, $user_id), ARRAY_N);
+    //this custom query has been formatted as one line to pass PCP checks
+    //using $wpdb->prepare to prevent SQL injection
+    //using $wpdb->wp_cache_get to utilize caching
+
+    $cacheKey = "pms_field_{$fieldname}_{$user_id}";
+    $results = $wpdb->wp_cache_get($cacheKey);
+    if ($results === false) {
+        $results = $wpdb->get_var($wpdb->prepare(
+            "SELECT %s FROM {$wpdb->prefix}pms_member_subscriptions 
+            INNER JOIN {$wpdb->prefix}posts 
+              ON ({$wpdb->prefix}posts.id = {$wpdb->prefix}pms_member_subscriptions.subscription_plan_id) 
+            WHERE {$wpdb->prefix}pms_member_subscriptions.user_id = %s",
+              $fieldname, $user_id), ARRAY_N);
+        $wpdb->wp_cache_set($cacheKey, $results);
+    }
+
     //returns an array (rows, cols)
     foreach ($results as $row) {
         $obj = $row;
