@@ -7,11 +7,13 @@
     <File Path="AdminMenuPlugin/uninstall.php" />
   </Folder>
   <Folder Name="/RacingReportPlugin/">
-    <File Path="RacingFleetReport/racing-fleet-report-plugin.php" />
+    <File Path="RacingFleetReport/pcc-racing-fleet-report.php" />
+    <File Path="RacingFleetReport/readme.txt" />
     <File Path="RacingFleetReport/uninstall.php" />
   </Folder>
   <Folder Name="/SubscriptionTotalsPlugin/">
-    <File Path="SubscriptionTotalsPlugin/subscription-totals-plugin.php" />
+    <File Path="SubscriptionTotalsPlugin/readme.txt" />
+    <File Path="SubscriptionTotalsPlugin/subscription-totals-report.php" />
     <File Path="SubscriptionTotalsPlugin/uninstall.php" />
   </Folder>
   <Folder Name="/UserDisplayShortcodePlugin/">

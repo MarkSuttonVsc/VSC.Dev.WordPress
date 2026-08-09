@@ -6,7 +6,7 @@ Custom Post Type: None
 Plugin URI: 
 Description: A short code to display the string value of a given field for the current user data. E.g. [current-user-data fieldname="first_name"]
 Version: 1.3  
-Version Notes: Plugin Checked for WordPress 6.3.1
+Version Notes: Plugin Checked for WordPress 7.0.3
 Author: Mark D Sutton
 Author URI: https://visual-software.co.uk
 License: GPLv2

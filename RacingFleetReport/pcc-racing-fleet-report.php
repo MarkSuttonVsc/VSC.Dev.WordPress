@@ -1,14 +1,14 @@
 <?php
 /*
-Plugin Name: Racing Fleet Report Plugin - HTML Table
-Text Identifier: racing-fleet-report-plugin
+Plugin Name: PCC Racing Fleet Report 
+Text Identifier: pcc-racing-fleet-report
 Custom Post Type: None
-Plugin URI: 
+Plugin URI:  
 Description: A short code to display a report table [racing_fleet_report]
-Version: 1.1 Uses esc_html() to protect from malicious inputs 
-Version Notes: 
+Version: 1.2 
+Version Notes: Plugin Checked for WordPress 7.0.3
 Author: Mark D Sutton
-Author URI: visual-software.co.uk
+Author URI: https://visual-software.co.uk
 License: GPLv2
 */
 
@@ -28,6 +28,8 @@ License: GPLv2
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
 function report_table_output()
 {
@@ -51,8 +53,9 @@ function report_table_output()
     $SQL .= " LEFT JOIN ".$pfx."usermeta v_sail_ids ON (v_sail_ids.user_id = ".$pfx."users.id AND v_sail_ids.meta_key='sail_id')";
     $SQL .= " WHERE ".$pfx."posts.post_type = 'pms-subscription' AND ".$pfx."posts.post_name='pcc-racing-fee'";
     $SQL .= " ORDER BY v_boat_names.meta_value ";
-    $results = $wpdb->get_results($SQL);
-
+    
+    //$results = $wpdb->get_results($SQL);
+    $results = $wpdb->wp_cache_get($SQL);
 
     $content = '';
     $content .= "<table class='pcc-report-table'>";
@@ -79,6 +82,5 @@ function report_table_output()
     return $content;
 }
 
-add_shortcode('racing_fleet_report', 'report_table_output');
+add_shortcode('pcc-racing-fleet-report', 'report_table_output');
 
-?>
