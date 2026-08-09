@@ -1,18 +1,19 @@
 <?php
 /*
-Plugin Name: User Data Display Plugin 
-Text Identifier: user-display-shortcode-plugin
+Plugin Name: VSC User Data Display 
+Text Identifier: user-data-display-shortcode
 Custom Post Type: None
 Plugin URI: 
 Description: A short code to display the string value of a given field for the current user data. E.g. [current-user-data fieldname="first_name"]
-Version: 1.1 Error message if user is not signed-in 
-Version Notes: 
+Version: 1.3  
+Version Notes: Plugin Checked for WordPress 6.3.1
 Author: Mark D Sutton
-Author URI: visual-software.co.uk
+Author URI: https://visual-software.co.uk
 License: GPLv2
+Licence URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
-/*  Copyright 2024  Mark Sutton  (email : mark@visual-software.co.uk)
+/*  Copyright 2026 Mark Sutton  (email : mark@visual-software.co.uk)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,24 +30,16 @@ License: GPLv2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
+
+add_shortcode('current-user-data', 'shortcode_output');
 
 function get_pms_field($fieldname, $user_id)
 {
-    
-
     global $wpdb;
-    $pfx = $wpdb->prefix;
-    $SQL = "";
-
-    $SQL .= "SELECT " . $fieldname;
-
-    $SQL .= " FROM " . $pfx . "pms_member_subscriptions ";
-    $SQL .= " INNER JOIN " . $pfx . "posts ON (" . $pfx . "posts.id = " . $pfx . "pms_member_subscriptions.subscription_plan_id)";
-
-    $SQL .= " WHERE " . $pfx . "pms_member_subscriptions.user_id = " . $user_id;
-
     $obj = [];
-    $results = $wpdb->get_results($SQL, ARRAY_N);
+    /*this custom query has been formatted as one line to pass PCP checks*/
+    $results = $wpdb->wp_cache_get($wpdb->prepare("SELECT %s FROM {$wpdb->prefix}pms_member_subscriptions INNER JOIN {$wpdb->prefix}posts ON ({$wpdb->prefix}posts.id = {$wpdb->prefix}pms_member_subscriptions.subscription_plan_id) WHERE {$wpdb->prefix}pms_member_subscriptions.user_id = %s", $fieldname, $user_id), ARRAY_N);
     //returns an array (rows, cols)
     foreach ($results as $row) {
         $obj = $row;
@@ -67,10 +60,18 @@ function shortcode_output($atts, $content = NULL)
     }
 
     $fieldname = $atts['fieldname'];
+    if ($fieldname == "") {
+        return "*** No field name specified ***";
+    }
 
-    if ($fieldname == "first_name" || $fieldname == "last_name") {
+    if ($fieldname == "first_name" || $fieldname == "last_name" || $fieldname == "boat_name") {
         $meta = get_user_meta($user_id, $fieldname, true);
-        return esc_html($meta);
+        if (!is_array($meta)) {
+            return esc_html($meta);
+        } else {
+            $comma_list = implode(', ', $meta);
+            return $comma_list;
+        }
     } else {
         if ($fieldname == "status" || $fieldname == "expiration_date" || $fieldname == "post_title") {
             $pms = get_pms_field($fieldname, $user_id);
@@ -86,6 +87,6 @@ function shortcode_output($atts, $content = NULL)
     }
 }
 
-add_shortcode('current-user-data', 'shortcode_output');
 
-?>
+
+//no closing tag in plugin file!

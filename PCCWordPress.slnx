@@ -15,7 +15,8 @@
     <File Path="SubscriptionTotalsPlugin/uninstall.php" />
   </Folder>
   <Folder Name="/UserDisplayShortcodePlugin/">
+    <File Path="UserDisplayShortcodePlugin/readme.txt" />
     <File Path="UserDisplayShortcodePlugin/uninstall.php" />
-    <File Path="UserDisplayShortcodePlugin/user-display-shortcode-plugin.php" />
+    <File Path="UserDisplayShortcodePlugin/user-data-display-shortcode.php" />
   </Folder>
 </Solution>
