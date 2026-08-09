@@ -4,7 +4,7 @@ Plugin Name: PCC Racing Fleet Report
 Text Identifier: pcc-racing-fleet-report
 Custom Post Type: None
 Plugin URI:  
-Description: A short code to display a report table [racing_fleet_report]
+Description: A short code to display a report table [racing-fleet-report]
 Version: 1.2 
 Version Notes: Plugin Checked for WordPress 7.0.3
 Author: Mark D Sutton
@@ -34,28 +34,25 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 function report_table_output()
 {
     global $wpdb;
-    $pfx = $wpdb->prefix;
-    $SQL = "";
-    $SQL .= "SELECT " .$pfx."users.ID user_id," .$pfx."users.user_login,";
-    $SQL .= "v_first_names.meta_value first_name,    v_last_names.meta_value last_name,    v_boat_names.meta_value boat_name,   v_boat_roles.meta_value boat_role,";
-    $SQL .= "v_boat_types.meta_value boat_type, v_sail_ids.meta_value sail_id, ";
-    $SQL .= $pfx."pms_member_subscriptions.status,";
-    $SQL .= $pfx."pms_member_subscriptions.expiration_date";
-    $SQL .= " FROM ".$pfx."pms_member_subscriptions ";
-    $SQL .= " INNER JOIN ".$pfx."users ON (".$pfx."users.id = ".$pfx."pms_member_subscriptions.user_id)";
-    $SQL .= " INNER JOIN ".$pfx."posts ON (".$pfx."posts.id = ".$pfx."pms_member_subscriptions.subscription_plan_id)";
 
-    $SQL .= " LEFT JOIN ".$pfx."usermeta v_first_names ON (v_first_names.user_id = ".$pfx."users.id AND v_first_names.meta_key='first_name')";
-    $SQL .= " LEFT JOIN ".$pfx."usermeta v_last_names ON (v_last_names.user_id = ".$pfx."users.id AND v_last_names.meta_key='last_name')";
-    $SQL .= " LEFT JOIN ".$pfx."usermeta v_boat_names ON (v_boat_names.user_id = ".$pfx."users.id AND v_boat_names.meta_key='boat_name')";
-    $SQL .= " LEFT JOIN ".$pfx."usermeta v_boat_roles ON (v_boat_roles.user_id = ".$pfx."users.id AND v_boat_roles.meta_key='boat_role')";
-    $SQL .= " LEFT JOIN ".$pfx."usermeta v_boat_types ON (v_boat_types.user_id = ".$pfx."users.id AND v_boat_types.meta_key='boat_type')";
-    $SQL .= " LEFT JOIN ".$pfx."usermeta v_sail_ids ON (v_sail_ids.user_id = ".$pfx."users.id AND v_sail_ids.meta_key='sail_id')";
-    $SQL .= " WHERE ".$pfx."posts.post_type = 'pms-subscription' AND ".$pfx."posts.post_name='pcc-racing-fee'";
-    $SQL .= " ORDER BY v_boat_names.meta_value ";
-    
-    //$results = $wpdb->get_results($SQL);
-    $results = $wpdb->wp_cache_get($SQL);
+    //query not repeated, no need to cache the results, so we can use get_results() directly
+    //no need to prepare - no parameters to bind, and no user input
+    $results = $wpdb->get_results(
+    "SELECT {$wpdb->prefix}users.ID user_id,{$wpdb->prefix}users.user_login,
+        v_first_names.meta_value first_name,    v_last_names.meta_value last_name,    v_boat_names.meta_value boat_name,  v_boat_roles.meta_value boat_role,
+        v_boat_types.meta_value boat_type, v_sail_ids.meta_value sail_id, {$wpdb->prefix}pms_member_subscriptions.status, {$wpdb->prefix}pms_member_subscriptions.expiration_date
+    FROM {$wpdb->prefix}pms_member_subscriptions 
+    INNER JOIN {$wpdb->prefix}users ON ({$wpdb->prefix}users.id = {$wpdb->prefix}pms_member_subscriptions.user_id) 
+    INNER JOIN {$wpdb->prefix}posts ON ({$wpdb->prefix}posts.id = {$wpdb->prefix}pms_member_subscriptions.subscription_plan_id) 
+    LEFT JOIN {$wpdb->prefix}usermeta v_first_names ON (v_first_names.user_id = {$wpdb->prefix}users.id AND v_first_names.meta_key='first_name') 
+    LEFT JOIN {$wpdb->prefix}usermeta v_last_names ON (v_last_names.user_id = {$wpdb->prefix}users.id AND v_last_names.meta_key='last_name') 
+    LEFT JOIN {$wpdb->prefix}usermeta v_boat_names ON (v_boat_names.user_id = {$wpdb->prefix}users.id AND v_boat_names.meta_key='boat_name') 
+    LEFT JOIN {$wpdb->prefix}usermeta v_boat_roles ON (v_boat_roles.user_id = {$wpdb->prefix}users.id AND v_boat_roles.meta_key='boat_role') 
+    LEFT JOIN {$wpdb->prefix}usermeta v_boat_types ON (v_boat_types.user_id = {$wpdb->prefix}users.id AND v_boat_types.meta_key='boat_type') 
+    LEFT JOIN {$wpdb->prefix}usermeta v_sail_ids ON (v_sail_ids.user_id = {$wpdb->prefix}users.id AND v_sail_ids.meta_key='sail_id') 
+    WHERE {$wpdb->prefix}posts.post_type = 'pms-subscription' AND {$wpdb->prefix}posts.post_name='pcc-racing-fee' 
+    ORDER BY v_boat_names.meta_value" 
+    );
 
     $content = '';
     $content .= "<table class='pcc-report-table'>";
