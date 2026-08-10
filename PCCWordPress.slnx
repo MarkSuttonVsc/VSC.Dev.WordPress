@@ -7,6 +7,10 @@
     <File Path="AdminMenuPlugin/readme.txt" />
     <File Path="AdminMenuPlugin/uninstall.php" />
   </Folder>
+  <Folder Name="/AdminMenuPlugin/assets/">
+    <File Path="AdminMenuPlugin/assets/pcc-admin-script.js" />
+    <File Path="AdminMenuPlugin/assets/pcc-admin-styles.css" />
+  </Folder>
   <Folder Name="/RacingReportPlugin/">
     <File Path="RacingFleetReport/pcc-racing-fleet-report.php" />
     <File Path="RacingFleetReport/readme.txt" />
