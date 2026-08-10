@@ -6,26 +6,28 @@
     Author:         Mark Sutton
 */
 
+if (!defined('ABSPATH'))
+    exit; // Exit if accessed directly
 
 function get_quarter_label($datestr)
 {
     $date = strtotime($datestr);
-    $month = date('m',$date);
+    $month = gmdate('m',$date);
     if ($month == 1 || $month == 2 || $month == 3)
     {
-        return "Q1 ".date('Y',$date);
+        return "Q1 ".gmdate('Y',$date);
     }
     if ($month == 4 || $month == 5 || $month == 6)
     {
-        return "Q2 ".date('Y',$date);
+        return "Q2 ".gmdate('Y',$date);
     }
     if ($month == 7 || $month == 8 || $month == 9)
     {
-        return "Q3 ".date('Y',$date);
+        return "Q3 ".gmdate('Y',$date);
     }
     if ($month == 10 || $month == 11 || $month == 12)
     {
-        return "Q4 ".date('Y',$date);
+        return "Q4 ".gmdate('Y',$date);
     }
     return "";
 }
@@ -34,11 +36,11 @@ function is_end_of_year_aligned($datestr)
 {
     //it doesnt matter what the year is
     $date = strtotime($datestr);
-    if (date('d',$date) !=31)     return false;
-    if (date('m',$date) !=12)     return false;
-    if (date('H',$date) !=23)     return false;
-    if (date('i',$date) !=59)     return false;
-    if (date('s',$date) !=59)     return false;
+    if (gmdate('d',$date) !=31)     return false;
+    if (gmdate('m',$date) !=12)     return false;
+    if (gmdate('H',$date) !=23)     return false;
+    if (gmdate('i',$date) !=59)     return false;
+    if (gmdate('s',$date) !=59)     return false;
 
     return true;
 }
@@ -47,9 +49,9 @@ function end_of_year_align($datestr)
 {
     //if the given year is smaller than this year - use that,
     //otherwise use this year
-    $this_year = date('Y',time()); 
+    $this_year = gmdate('Y',time()); 
     $date = strtotime($datestr);
-    $date_year = date('Y', $date);
+    $date_year = gmdate('Y', $date);
     if ($date_year < $this_year)
     {
         return $date_year."-12-31 23:59:59";
@@ -61,32 +63,32 @@ function is_quarter_aligned($datestr)
 {
     $date = strtotime($datestr);
     //must be day 1 (all quarters)
-    if (date('d',$date) !=1)     return false;
+    if (gmdate('d',$date) !=1)     return false;
     //must be midnight (all quarters)
-    if (date('H',$date) !=0)     return false;
-    if (date('i',$date) !=0)     return false;
-    if (date('s',$date) !=0)     return false;
+    if (gmdate('H',$date) !=0)     return false;
+    if (gmdate('i',$date) !=0)     return false;
+    if (gmdate('s',$date) !=0)     return false;
 
-    $month = date('m',$date);
+    $month = gmdate('m',$date);
     //Q1 must be Jan
     if ($month == 1 || $month == 2 || $month == 3)
     {
-        if (date('m',$date) !=1)     return false;
+        if (gmdate('m',$date) !=1)     return false;
     }
     //Q2 must be Apr
     if ($month == 4 || $month == 5 || $month == 6)
     {
-        if (date('m',$date) !=4)     return false;
+        if (gmdate('m',$date) !=4)     return false;
     }
     //Q2 must be Jul
     if ($month == 7 || $month == 8 || $month == 9)
     {
-        if (date('m',$date) !=7)     return false;
+        if (gmdate('m',$date) !=7)     return false;
     }
     //Q4 must be Oct
     if ($month == 10 || $month == 11 || $month == 12)
     {
-        if (date('m',$date) !=10)     return false;
+        if (gmdate('m',$date) !=10)     return false;
     }
     
     return true;
@@ -96,7 +98,7 @@ function is_quarter_aligned($datestr)
 function quarter_align($datestr)
 {
     $date = strtotime($datestr);
-    $month = date('m',$date);
+    $month = gmdate('m',$date);
     $new_month = $month;
     
     //Q1 must be Jan
@@ -120,7 +122,7 @@ function quarter_align($datestr)
         $new_month = 10;
     }
 
-    $year = date('Y',$date);
+    $year = gmdate('Y',$date);
     
     return $year."-".$new_month."-01 00:00:00";
 

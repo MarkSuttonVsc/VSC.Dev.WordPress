@@ -6,7 +6,8 @@
     Author:         Mark Sutton
 */
 
-
+if (!defined('ABSPATH'))
+    exit; // Exit if accessed directly
 
 //AJAX handler
 function find_member_handler()
