@@ -31,6 +31,8 @@ License: GPLv2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// Updates:       2024-06-05 MDS - Added wp_kses_post() to echo statements to prevent XSS vulnerabilities.
+
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 

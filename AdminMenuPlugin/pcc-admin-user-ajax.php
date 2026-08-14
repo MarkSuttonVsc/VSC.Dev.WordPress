@@ -4,6 +4,7 @@
     Description:    AJAX user functions
     Include Status: Required
     Author:         Mark Sutton
+    Update:         2024-06-05 Updates for PCP checks
 */
 
 if (!defined('ABSPATH'))
@@ -12,142 +13,161 @@ if (!defined('ABSPATH'))
 //AJAX handler
 function find_member_handler()
 {
-    $user = wp_get_current_user() ;
-    if (wp_verify_nonce($_POST["_ajax_nonce"],"pcc-subs-correction-ajax-call-nonce-key-".$user->ID))
+    $current_user = wp_get_current_user();
+    if ((array_key_exists("_ajax_nonce", $_POST) && array_key_exists("search_criteria", $_POST)))
     {
-        $results =  find_member_options($_POST["search_criteria"]);
-        wp_send_json($results);
+        $nonce = sanitize_text_field(wp_unslash($_POST['_ajax_nonce']));
+        $search_criteria = sanitize_text_field(wp_unslash($_POST['search_criteria']));
+        if (wp_verify_nonce($nonce,"pcc-subs-correction-ajax-call-nonce-key-".$current_user->ID))
+        {
+            $results =  find_member_options($search_criteria);
+            wp_send_json($results);
+            return;
+        }
     }
-    else{
-        die(); //returns nothing
-    }
+    die(); //returns nothing
 }
 
 //AJAX handler
 function get_member_handler()
 {
     $current_user = wp_get_current_user() ;
-    if (wp_verify_nonce($_POST["_ajax_nonce"],"pcc-subs-correction-ajax-call-nonce-key-".$current_user->ID))
+    
+    if ((array_key_exists("_ajax_nonce", $_POST) && array_key_exists("user_id", $_POST)))
     {
-        $ID = $_POST["user_id"];
-        $return = get_user_subs_details($ID);
-        wp_send_json($return);
+        $nonce = sanitize_text_field(wp_unslash($_POST['_ajax_nonce']));
+        if (wp_verify_nonce($nonce,"pcc-subs-correction-ajax-call-nonce-key-".$current_user->ID))
+        {
+            $user_id = sanitize_key($_POST["user_id"]);
+            $return = get_user_subs_details($user_id);
+            wp_send_json($return);
+            return;
+        }
     }
-    else{
-        die(); //returns nothing
-    }
+    die(); //returns nothing
 }
 
 //AJAX handler
 function set_member_plan_handler()
 {
-    $ID = $_POST["user_id"];
-    $old_plan_id = $_POST["old_plan_id"];
-    $new_plan_id = $_POST["new_plan_id"];
-    //update the member's subscription plan
-    $result = update_member_plan($ID, $old_plan_id, $new_plan_id);
-    $return = get_user_subs_details($ID); //array
-    //set last terms of array
-    $return["result_status"] = $result["Result"];
-    $return["SQL"] = $result["SQL"];
-    
-    wp_send_json($return);    
+    $user = wp_get_current_user();
+    if (array_key_exists("_ajax_nonce", $_POST)
+        && array_key_exists("user_id", $_POST)
+        && array_key_exists("old_plan_id", $_POST)
+        && array_key_exists("new_plan_id", $_POST)) 
+    {
+        $ID = sanitize_key(wp_unslash($_POST["user_id"]));
+        $old_plan_id = sanitize_key(wp_unslash($_POST["old_plan_id"]));
+        $new_plan_id = sanitize_key(wp_unslash($_POST["new_plan_id"]));
+        $nonce = sanitize_text_field(wp_unslash($_POST['_ajax_nonce']));
+        if (wp_verify_nonce($nonce, "pcc-subs-correction-ajax-call-nonce-key-" . $user->ID)) 
+        {
+            //update the member's subscription plan
+            $result = update_member_plan($ID, $old_plan_id, $new_plan_id);
+            $return = get_user_subs_details($ID); //array
+            
+            //set last terms of array
+            $return["result_status"] = $result["Result"];
+            $return["SQL"] = $result["SQL"];
+            wp_send_json($return);
+            return;
+        }
+    }
+    die(); //returns nothing
 }
 
 //AJAX handler
 function update_discount_ajax_handler()
 {
-    
-    $discount_id = $_POST["discount_id"];
-
-    if (is_numeric($discount_id))
+    $user = wp_get_current_user();
+    if (array_key_exists("_ajax_nonce", $_POST) && array_key_exists("discount_id", $_POST))
     {
-        $msg="";
-        $result = update_discount_dates($discount_id);
-        if (!empty($result) > 0)
-        {
-            $msg = "Updated discount dates.";
-        }   
-        else{
-            $msg = "Data problem!";
-        } 
-        $return = array(
-            "discount_id"=> $discount_id,
-            "message"=>$msg,
-            "result"=> $result
-        );
-        wp_send_json($return);   
+        $discount_id = sanitize_key(wp_unslash($_POST["discount_id"]));
+        $nonce = sanitize_text_field(wp_unslash($_POST['_ajax_nonce']));
+        if (wp_verify_nonce($nonce, "pcc-subs-correction-ajax-call-nonce-key-" . $user->ID)) {
+            if (is_numeric($discount_id)) {
+                $msg = "";
+                $result = update_discount_dates($discount_id);
+                if (!empty($result) > 0) {
+                    $msg = "Updated discount dates.";
+                } else {
+                    $msg = "Data problem!";
+                }
+                $return = array(
+                    "discount_id" => $discount_id,
+                    "message" => $msg,
+                    "result" => $result
+                );
+                wp_send_json($return);
+            }
+        }
     }
-    else
-    {
-        $return_error = array("message"=>"Cannot update - no valid id.");
-        wp_send_json($return_error);  
-    } 
+    $return_error = array("message"=>"Cannot update - no valid id.");
+    wp_send_json($return_error);  
 }
 
 //AJAX handler
 function update_user_sub_handler()
 {
-    $subs_id = $_POST["subs_id"];
-    if (is_numeric($subs_id))
-    {
-        $msg = "";
-        $result = update_user_sub_dates($subs_id);
-        if (!empty($result) > 0)
-        {
-            $msg = "Updated subscription dates.";
-        }   
-        else{
-            $msg = "Data problem!";
-        } 
+    $user = wp_get_current_user();
+    if (array_key_exists("_ajax_nonce", $_POST) && array_key_exists("subs_id", $_POST)) {
+        $subs_id = sanitize_key(wp_unslash($_POST["subs_id"]));
+        $nonce = sanitize_text_field(wp_unslash($_POST['_ajax_nonce']));
+        if (wp_verify_nonce($nonce, "pcc-subs-correction-ajax-call-nonce-key-" . $user->ID)) {
+            if (is_numeric($subs_id)) 
+            {
+                $msg = "";
+                $result = update_user_sub_dates($subs_id);
+                if (!empty($result) > 0) {
+                    $msg = "Updated subscription dates.";
+                } else {
+                    $msg = "Data problem!";
+                }
 
-        $return = array(
-            "subs_id"=> $subs_id,
-            "message"=>$msg,
-            "result"=> $result
-        );
-        wp_send_json($return);   
-    }
-    else
-    {
-        $return_error = array("message"=>"Cannot update - no valid id.");
-        wp_send_json($return_error);  
-    }
-    
+                $return = array(
+                    "subs_id" => $subs_id,
+                    "message" => $msg,
+                    "result" => $result
+                );
+                wp_send_json($return);
+            }
+        }
+    }    
+    $return_error = array("message"=>"Cannot update - no valid id.");
+    wp_send_json($return_error);      
 }
 
 //AJAX handler
 function refresh_subs_table_handler()
 {
     $user = wp_get_current_user() ;
-    if (wp_verify_nonce($_POST["_ajax_nonce"],"pcc-subs-date-nonce-field-ajax-call-nonce-key-".$user->ID))
+    if (array_key_exists("_ajax_nonce", $_POST)) 
     {
-        $results =  array(
-            "table_html"=>get_user_subs_table()
-        );
-        wp_send_json($results);
+        $nonce = sanitize_text_field(wp_unslash($_POST['_ajax_nonce']));
+        if (wp_verify_nonce($nonce, "pcc-subs-date-nonce-field-ajax-call-nonce-key-" . $user->ID)) {
+            $results = array(
+                "table_html" => get_user_subs_table()
+            );
+            wp_send_json($results);
+        }
     }
-    else{
-        die(); //returns nothing
-    }
-
+    die(); //returns nothing   
 }
 
 //AJAX handler
 function refresh_discounts_table_handler()
 {
     $user = wp_get_current_user() ;
-    if (wp_verify_nonce($_POST["_ajax_nonce"],"pcc-quarters-nonce-field-ajax-call-nonce-key-".$user->ID))
-    {
-        $results =  array(
-            "table_html"=>get_discounts_table()
-        );
-        wp_send_json($results);
+    if (array_key_exists("_ajax_nonce", $_POST)) {
+        $nonce = sanitize_text_field(wp_unslash($_POST['_ajax_nonce']));
+        if (wp_verify_nonce($nonce, "pcc-quarters-nonce-field-ajax-call-nonce-key-" . $user->ID)) {
+            $results = array(
+                "table_html" => get_discounts_table()
+            );
+            wp_send_json($results);
+        }
     }
-    else{
-        die(); //returns nothing
-    }
-
+    die(); //returns nothing    
 }
 
 
